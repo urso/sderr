@@ -34,7 +34,8 @@ func (b *Builder) WithStack() *Builder {
 }
 
 func (b *Builder) WithDiagnosticContext(ctx *diag.Context) *Builder {
-	return &Builder{ctx: diag.NewContext(b.ctx, ctx), withStack: b.withStack}
+	merged := diag.NewContext(b.ctx, ctx)
+	return &Builder{ctx: diag.NewContext(merged, nil), withStack: b.withStack}
 }
 
 func (b *Builder) WithDiagnotics(ctx context.Context) *Builder {
