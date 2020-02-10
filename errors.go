@@ -47,6 +47,13 @@ func (e *errValue) StackTrace() StackTrace {
 	return e.stack
 }
 
+func (e *errValue) Context() *diag.Context {
+	if e.ctx.Len() == 0 {
+		return nil
+	}
+	return diag.NewContext(e.ctx, nil)
+}
+
 func (e *errValue) Error() string {
 	return e.report(false)
 }

@@ -8,6 +8,8 @@ package sderr
 
 import (
 	"reflect"
+
+	"github.com/urso/diag"
 )
 
 // errCheckIs is an optional interface that allows users and errors to
@@ -47,6 +49,30 @@ type wrappedError interface {
 }
 
 var tError = reflect.TypeOf((*error)(nil)).Elem()
+
+// At returns the file name and line the error originated from (if present)
+func At(err error) (string, int) {
+	if pe, ok := err.(interface{ At() (string, int) }); ok {
+		return pe.At()
+	}
+	return "", 0
+}
+
+// Trace returns the stack trace, if the error value contains one.
+func Trace(err error) StackTrace {
+	if se, ok := err.(interface{ StackTrace() StackTrace }); ok {
+		return se.StackTrace()
+	}
+	return nil
+}
+
+// Context returns the errors diagnostic context, if the direct error value has a context.
+func Context(err error) *diag.Context {
+	if ce, ok := err.(interface{ Context() *diag.Context }); ok {
+		return ce.Context()
+	}
+	return nil
+}
 
 // Is walks the complete error tree, trying to find an error that matches
 // target.
