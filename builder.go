@@ -58,7 +58,7 @@ func (b *Builder) doErrf(skip int, msg string, vs []interface{}) error {
 	}
 }
 
-func (b *Builder) Wrap(skip int, cause error, msg string, vs ...interface{}) error {
+func (b *Builder) Wrap(cause error, msg string, vs ...interface{}) error {
 	return b.doWrap(1, cause, msg, vs)
 }
 
