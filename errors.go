@@ -135,6 +135,9 @@ func (e *wrappedErrValue) report(verbose bool) string {
 }
 
 func (e *multiErrValue) Unwrap() error {
+	if len(e.causes) == 0 {
+		return nil
+	}
 	return e.Cause(0)
 }
 

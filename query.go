@@ -211,8 +211,8 @@ func NumCauses(in error) int {
 	}
 }
 
-// Unwrap returns the i-th cause from the error value.
-func Unwrap(in error, i int) error {
+// Cause returns the i-th cause from the error value.
+func Cause(in error, i int) error {
 	switch err := in.(type) {
 	case multiCauser:
 		return err.Cause(i)
@@ -232,6 +232,29 @@ func Unwrap(in error, i int) error {
 		}
 		return err.Unwrap()
 
+	default:
+		return nil
+	}
+}
+
+// Cause returns the first wrapped cause from the error value.
+func Unwrap(in error) error {
+	switch err := in.(type) {
+	case unwrapper:
+		return err.Unwrap()
+	case causer:
+		return err.Cause()
+	case wrappedError:
+		errs := err.WrappedErrors()
+		if len(errs) == 0 {
+			return nil
+		}
+		return errs[0]
+	case multiCauser:
+		if err.NumCauses() == 0 {
+			return nil
+		}
+		return err.Cause(0)
 	default:
 		return nil
 	}
