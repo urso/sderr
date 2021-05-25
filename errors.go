@@ -94,7 +94,7 @@ func (e *wrappedErrValue) report(verbose bool) string {
 
 	buf := &strings.Builder{}
 	buf.WriteString(e.errValue.report(verbose))
-	if verbose && e.cause != nil {
+	if e.cause != nil {
 		putSubErr(buf, sep, e.cause, verbose)
 	}
 	return buf.String()
@@ -122,10 +122,8 @@ func (e *multiErrValue) report(verbose bool) string {
 
 	buf := &strings.Builder{}
 	buf.WriteString(e.errValue.report(verbose))
-	if verbose {
-		for _, cause := range e.causes {
-			putSubErr(buf, sep, cause, verbose)
-		}
+	for _, cause := range e.causes {
+		putSubErr(buf, sep, cause, verbose)
 	}
 	return buf.String()
 }
